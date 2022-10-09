@@ -1,4 +1,4 @@
-﻿AutoMapper in API
+AutoMapper in API
 
 - Add nuget package
 - Add mapping profile
