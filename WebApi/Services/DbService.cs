@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using WebApi.Exceptions;
 
 namespace WebApi.Services
 {
@@ -20,30 +21,27 @@ namespace WebApi.Services
 
         public async Task<List<T>> GetData<T>(string QUERY) where T : class
         {
-            try
+            using (sqlConnection)
             {
-                using (sqlConnection)
+                sqlConnection.Open();
+
+                var command = new SqlCommand(QUERY, sqlConnection);
+                DataTable dt = new DataTable();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                dt.Load(reader);
+                if (dt == null)
                 {
-                    sqlConnection.Open();
-
-                    var command = new SqlCommand(QUERY, sqlConnection);
-                    DataTable dt = new DataTable();
-                    SqlDataReader reader = await command.ExecuteReaderAsync();
-                    dt.Load(reader);
-                    if (dt == null) return null;
-
-                    List<T> data = new List<T>();
-
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        CreateObjectData(data, dr);
-                    }
-                    return data;
+                    throw new DbNoDataException("No Data collected!");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw;
+
+                List<T> data = new List<T>();
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    CreateObjectData(data, dr);
+                    //throw new DtoException($"Could not create Dto of type {typeof(T).Name}");
+                }
+                return data;
             }
         }
 

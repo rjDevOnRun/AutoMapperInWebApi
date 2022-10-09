@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using WebApi.Services;
+using WebApi.Exceptions;
 
 namespace WebApi
 {
@@ -28,6 +29,9 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // register exception handling middleware
+            services.AddTransient<ExceptionHandlingMiddleware>();
+
             // Configure Automapper DI
             services.AddAutoMapper(typeof(MapperProfile));
 
@@ -54,6 +58,9 @@ namespace WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // allow usage of excep handling middleware
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseAuthorization();
 
