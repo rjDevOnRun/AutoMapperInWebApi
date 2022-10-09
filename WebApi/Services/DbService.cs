@@ -12,7 +12,7 @@ namespace WebApi.Services
     public class DbService : IDbService
     {
         private SqlConnection sqlConnection;
-        private string connectionString = "Server=RJI5PC;Database=PIDPlantDb;User Id=sa;Password=Ladyinblue@123;";
+        private string connectionString = "your-connection-string-here";
 
         public DbService()
         {
@@ -39,7 +39,7 @@ namespace WebApi.Services
                 foreach (DataRow dr in dt.Rows)
                 {
                     CreateObjectData(data, dr);
-                    //throw new DtoException($"Could not create Dto of type {typeof(T).Name}");
+                    throw new DtoException($"Could not create Dto of type {typeof(T).Name}");
                 }
                 return data;
             }

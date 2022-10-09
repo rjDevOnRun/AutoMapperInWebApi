@@ -8,6 +8,8 @@ namespace WebApi.Exceptions
     /// <summary>
     /// Middle to handle excptions at Global level
     /// </summary>
+    /// <ref>https://www.youtube.com/watch?v=Cy53ENszjWo</ref>
+    /// <ref>https://ankitvijay.net/2021/04/21/consistent-error-handling/</ref>
     public class ExceptionHandlingMiddleware : IMiddleware
     {
         /// <summary>
@@ -35,7 +37,7 @@ namespace WebApi.Exceptions
             }
             catch (Exception e)
             {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsync(e.Message);
             }
         }
